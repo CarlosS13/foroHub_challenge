@@ -6,27 +6,43 @@ import com.aluracursos.forohub.domain.topico.DatosDetalleTopico;
 import com.aluracursos.forohub.domain.topico.Topico;
 import com.aluracursos.forohub.domain.topico.TopicoRepository;
 import com.aluracursos.forohub.domain.topico.dto.DatosRegistroTopico;
+import com.aluracursos.forohub.domain.usuario.Usuario;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/topicos")
+@SecurityRequirement(name = "bearer-key")
 public class TopicoController {
 
     @Autowired
     private TopicoRepository topicoRepository;
 
     @PostMapping
-    public ResponseEntity<DatosDetalleTopico> registrarTopico(@RequestBody @Valid DatosRegistroTopico datos){
-        Topico topico = topicoRepository.save((new Topico(datos)));
-        var detalleTopico = new DatosDetalleTopico(topico);
-        return ResponseEntity.ok(detalleTopico);
+    @Transactional
+    public ResponseEntity<DatosDetalleTopico> registrarTopico(
+            @RequestBody @Valid DatosRegistroTopico datos,
+            UriComponentsBuilder uriBuilder,
+            @Parameter(hidden = true) @AuthenticationPrincipal Usuario autorLogueado
+    ) {
+        Topico topico = topicoRepository.save(new Topico(datos, autorLogueado));
+
+        DatosDetalleTopico datosDetalleTopico = new DatosDetalleTopico(topico);
+        URI url = uriBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
+
+        return ResponseEntity.created(url).body(datosDetalleTopico);
     }
 
     @GetMapping

@@ -1,8 +1,8 @@
 package com.aluracursos.forohub.domain.topico;
 
 import com.aluracursos.forohub.domain.topico.dto.DatosRegistroTopico;
+import com.aluracursos.forohub.domain.usuario.Usuario;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -22,15 +22,18 @@ public class Topico {
     private String mensaje;
     private LocalDateTime fechaCreacion = LocalDateTime.now();
     private String status;
-    private String autor;
     private String curso;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
+    private Usuario autor;
 
-    public Topico(DatosRegistroTopico datos) {
+    public Topico(DatosRegistroTopico datos, Usuario autor) {
         this.titulo = datos.titulo();
         this.mensaje = datos.mensaje();
         this.status = "ACTIVO";
-        this.autor = datos.autor();
+        this.fechaCreacion = LocalDateTime.now();
         this.curso = datos.curso();
+        this.autor = autor;
     }
 
     public void actualizarInformacion(DatosActualizarTopico datos) {

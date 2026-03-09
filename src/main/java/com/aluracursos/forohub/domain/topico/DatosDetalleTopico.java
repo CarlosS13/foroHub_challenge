@@ -2,7 +2,14 @@ package com.aluracursos.forohub.domain.topico;
 
 import java.time.LocalDateTime;
 
-public record DatosDetalleTopico(Long id, String titulo, String mensaje, LocalDateTime fechaCreacion, String status, String autor, String curso) {
+public record DatosDetalleTopico(
+        Long id,
+        String titulo,
+        String mensaje,
+        LocalDateTime fechaCreacion,
+        String status,
+        String autor,
+        String curso) {
 
     public DatosDetalleTopico(Topico topico) {
         this(   topico.getId(),
@@ -10,7 +17,7 @@ public record DatosDetalleTopico(Long id, String titulo, String mensaje, LocalDa
                 topico.getMensaje(),
                 topico.getFechaCreacion(),
                 topico.getStatus(),
-                topico.getAutor(),
+                topico.getAutor().getLogin(),
                 topico.getCurso());
     }
 }
