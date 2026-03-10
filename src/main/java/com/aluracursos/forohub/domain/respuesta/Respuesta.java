@@ -44,4 +44,10 @@ public class Respuesta {
             this.solucion = datos.solucion();
         }
     }
+
+    public void marcarComoSolucion() {
+        this.solucion = true;
+
+        this.topico.setStatus("SOLUCIONADO");
+    }
 }

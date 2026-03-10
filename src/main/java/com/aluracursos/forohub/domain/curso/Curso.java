@@ -17,7 +17,7 @@ public class Curso {
     private Long id;
     private String nombre;
     private String categoria;
-    private Boolean activo = true;
+    private Boolean activo;
 
     public Curso(Long id, String nombre, String categoria) {
         this.id = id;

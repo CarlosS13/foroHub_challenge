@@ -13,6 +13,7 @@ import java.util.List;
 @Table(name = "topicos")
 @Entity(name = "Topico")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -59,4 +60,5 @@ public class Topico {
     public void marcarComoResuelto() {
         this.status = "RESUELTO";
     }
+
 }
